@@ -4,6 +4,7 @@
 // 0xcdfead2e updateHorseNumbers Set
 
 #define macro MAIN() = takes (0) returns (0) {
+    dup1 // Duplicate the function selector. [selector, selector]
     0x00 calldataload 0xE0 shr // Load the function selector. [selector]
     0xcdfead2e eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
     updateHorseNumbersJump // [updateHorseNumbersPC, true|false]
@@ -11,8 +12,13 @@
     updateHorseNumbersJump: // Function Dispatch 
         SET_NUMBER_OF_HORSES() // Route the func selector to the function data
 
+    //dispatch readHorseNumbers
+    0xe026c017 eq // Compare the function selector to the hash of `readHorseNumbers`. [true|false]
+    readHorseNumbersJump // [readHorseNumbersPC, true|false]
+    jumpi // Jump to the `readHorseNumbers` function if the selector matches. []
+    readHorseNumbersJump: // Function Dispatch 
+        GET_NUMBER_OF_HORSES() // Route the func selector to the function data
 }
 
-#define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {
-
-}
+#define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {}
+#define macro GET_NUMBER_OF_HORSES() = takes (0) returns (0) {}
