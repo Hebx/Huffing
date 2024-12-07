@@ -4,8 +4,8 @@
 // 0xcdfead2e updateHorseNumbers Set
 
 #define macro MAIN() = takes (0) returns (0) {
-    dup1 // Duplicate the function selector. [selector, selector]
     0x00 calldataload 0xE0 shr // Load the function selector. [selector]
+    dup1 // Duplicate the function selector. [selector, selector]
     0xcdfead2e eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
     updateHorseNumbersJump // [updateHorseNumbersPC, true|false]
     jumpi // Jump to the `updateHorseNumbers` function if the selector matches. []
