@@ -9,13 +9,15 @@
     0xcdfead2e eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
     updateHorseNumbersJump // [updateHorseNumbersPC, true|false]
     jumpi // Jump to the `updateHorseNumbers` function if the selector matches. []
-    updateHorseNumbersJump: // Function Dispatch 
-        SET_NUMBER_OF_HORSES() // Route the func selector to the function data
 
     //dispatch readHorseNumbers
     0xe026c017 eq // Compare the function selector to the hash of `readHorseNumbers`. [true|false]
     readHorseNumbersJump // [readHorseNumbersPC, true|false]
     jumpi // Jump to the `readHorseNumbers` function if the selector matches. []
+    0x00 0x00 revert // Revert if no function matched the selector. []
+    
+    updateHorseNumbersJump: // Function Dispatch 
+        SET_NUMBER_OF_HORSES() // Route the func selector to the function data
     readHorseNumbersJump: // Function Dispatch 
         GET_NUMBER_OF_HORSES() // Route the func selector to the function data
 }
