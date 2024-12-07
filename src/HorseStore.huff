@@ -1,0 +1,18 @@
+// Find the func selector -> route it to the function data
+
+// 0xe026c017 readHorseNumbers  Get
+// 0xcdfead2e updateHorseNumbers Set
+
+#define macro MAIN() = takes (0) returns (0) {
+    0x00 calldataload 0xE0 shr // Load the function selector. [selector]
+    0xcdfead2e eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
+    updateHorseNumbersJump // [updateHorseNumbersPC, true|false]
+    jumpi // Jump to the `updateHorseNumbers` function if the selector matches. []
+    updateHorseNumbersJump: // Function Dispatch 
+        SET_NUMBER_OF_HORSES() // Route the func selector to the function data
+
+}
+
+#define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {
+
+}
