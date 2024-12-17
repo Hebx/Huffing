@@ -3,15 +3,22 @@
 // 0xe026c017 readHorseNumbers  Get
 // 0xcdfead2e updateHorseNumbers Set
 
+/* Storage */
+#define constant NUMBER_OF_HORSES_STORAGE_SLOT = FREE_STORAGE_POINTER()
+
+/* Interface */
+#define function readHorseNumbers() view returns (uint256)
+#define function updateHorseNumbers(uint256) nonpayable returns () 
+
 #define macro MAIN() = takes (0) returns (0) {
     0x00 calldataload 0xE0 shr // Load the function selector. [selector]
     dup1 // Duplicate the function selector. [selector, selector]
-    0xcdfead2e eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
+    __FUNC_SIG(updateHorseNumbers) eq // Compare the function selector to the hash of `updateHorseNumbers`. [true|false]
     updateHorseNumbersJump // [updateHorseNumbersPC, true|false]
     jumpi // Jump to the `updateHorseNumbers` function if the selector matches. []
 
     //dispatch readHorseNumbers
-    0xe026c017 eq // Compare the function selector to the hash of `readHorseNumbers`. [true|false]
+    __FUNC_SIG(readHorseNumbers) eq // Compare the function selector to the hash of `readHorseNumbers`. [true|false]
     readHorseNumbersJump // [readHorseNumbersPC, true|false]
     jumpi // Jump to the `readHorseNumbers` function if the selector matches. []
     0x00 0x00 revert // Revert if no function matched the selector. []
@@ -22,5 +29,16 @@
         GET_NUMBER_OF_HORSES() // Route the func selector to the function data
 }
 
-#define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {}
-#define macro GET_NUMBER_OF_HORSES() = takes (0) returns (0) {}
+#define macro SET_NUMBER_OF_HORSES() = takes (0) returns (0) {
+    0x04 calldataload // get the value to store from the calldata [calldata - func_sig == value]
+    [NUMBER_OF_HORSES_STORAGE_SLOT] // give it a storage slot [storage_slot, value]
+    sstore // sstore opcode 
+    stop
+}
+#define macro GET_NUMBER_OF_HORSES() = takes (0) returns (0) {
+    [NUMBER_OF_HORSES_STORAGE_SLOT] // give it a storage slot [storage_slot]
+    sload // load from storage [value]
+    0x00 mstore // store the value in memory [value]
+    0x20 0x00  // mstore offset and size
+    return //
+}
